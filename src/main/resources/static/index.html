@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Demo - Quản lý Sản phẩm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fa-brands fa-docker"></i>
+                <h1>Store Manger</h1>
+                <span class="badge">Spring Boot + MySQL</span>
+            </div>
+            <div class="header-actions">
+                <button id="add-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
+                </button>
+            </div>
+        </header>
+
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm theo tên...">
+        </div>
+
+        <main>
+            <div class="grid-container" id="products-grid">
+                <!-- Data will be loaded here via JS -->
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Đang tải dữ liệu từ MySQL (Docker)...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Thêm Sản Phẩm Mới</h2>
+                <button class="close-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                
+                <div class="form-group">
+                    <label for="name">Tên sản phẩm *</label>
+                    <input type="text" id="name" required placeholder="Ví dụ: iPhone 15 Pro">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Giá (VNĐ) *</label>
+                        <input type="number" id="price" required min="1" placeholder="28000000">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Số lượng *</label>
+                        <input type="number" id="quantity" required min="0" placeholder="10">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Mô tả chi tiết</label>
+                    <textarea id="description" rows="3" placeholder="Nhập thông tin mô tả..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-btn">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn">Lưu Thông Tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
