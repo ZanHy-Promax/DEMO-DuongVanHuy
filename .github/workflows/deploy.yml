@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:   # 👈 thiếu cái này nên toang
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
