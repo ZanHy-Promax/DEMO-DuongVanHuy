@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Build & Deploy
 
 on:
   push:
@@ -6,26 +6,26 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to DevOps Classroom
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: zanhy/docker-demo:latest
+
+  deploy:
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
         run: |
-          REPO="zanhy/docker-demo"
-          CONTAINER_PORT=8080
-          RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST "${{ secrets.DEPLOY_URL }}?repo=$REPO&tag=latest&slot=5&container_port=$CONTAINER_PORT&strict_container_port=0")
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          CODE=$(echo "$RESPONSE" | tail -n1)
-          echo "Webhook HTTP: $CODE"
-          if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 300 ]; then
-            echo "Deploy failed. See the grouped logs below."
-            echo "::group::Webhook JSON details"
-            echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
-            echo "::endgroup::"
-            exit 1
-          fi
-          echo "Deploy succeeded."
-          echo "::group::Webhook JSON details"
-          echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
-          echo "::endgroup::"
+          curl -X POST "${{ secrets.DEPLOY_URL }}?repo=zanhy/docker-demo&tag=latest&slot=3&container_port=8080"
